@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurum — Restaurante</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5B0;
+    --dark: #0D0C0A;
+    --dark-2: #1A1815;
+    --dark-3: #252320;
+    --cream: #F5F0E8;
+    --text-muted: #8A8478;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--dark);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    background: linear-gradient(to bottom, rgba(13,12,10,0.95), transparent);
+    transition: background 0.4s;
+  }
+  nav.scrolled { background: rgba(13,12,10,0.97); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; letter-spacing: 0.3em; color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.8; transition: opacity 0.3s, color 0.3s; }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-cta { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.7rem 1.6rem; border: 1px solid var(--gold); color: var(--gold); background: transparent; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat', sans-serif; }
+  .nav-cta:hover { background: var(--gold); color: var(--dark); }
+
+  /* HERO */
+  .hero {
+    height: 100vh; position: relative;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, #2a2015 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, #1a1510 0%, transparent 60%),
+                var(--dark);
+  }
+  .hero-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(201,169,110,0.04) 80px);
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp 1s 0.3s forwards; }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(5rem, 12vw, 10rem);
+    font-weight: 300; line-height: 0.9;
+    color: var(--cream); letter-spacing: -0.02em;
+    opacity: 0; animation: fadeUp 1.2s 0.5s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-subtitle { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-top: 2.5rem; opacity: 0; animation: fadeUp 1s 0.9s forwards; }
+  .hero-divider { width: 1px; height: 60px; background: var(--gold); margin: 2.5rem auto; opacity: 0; animation: fadeUp 1s 1.1s forwards; }
+  .hero-scroll { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); opacity: 0; animation: fadeUp 1s 1.3s forwards; }
+
+  /* ABOUT */
+  .about { display: grid; grid-template-columns: 1fr 1fr; min-height: 80vh; }
+  .about-visual {
+    background: var(--dark-2); position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-pattern {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(201,169,110,0.12) 1px, transparent 0);
+    background-size: 32px 32px;
+  }
+  .about-number { font-family: 'Cormorant Garamond', serif; font-size: 18rem; font-weight: 300; color: rgba(201,169,110,0.06); line-height: 1; position: absolute; }
+  .about-badge {
+    position: relative; z-index: 2; width: 220px; height: 220px;
+    border: 1px solid rgba(201,169,110,0.3); border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  }
+  .about-badge-year { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--gold); line-height: 1; }
+  .about-badge-text { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.5rem; }
+  .about-text { padding: 6rem; display: flex; flex-direction: column; justify-content: center; }
+  .section-tag { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; line-height: 1.1; margin-bottom: 2rem; }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-body { font-size: 0.85rem; line-height: 2; color: var(--text-muted); max-width: 400px; }
+  .gold-line { width: 40px; height: 1px; background: var(--gold); margin: 2.5rem 0; }
+
+  /* MENU */
+  .menu { background: var(--dark-2); padding: 8rem 4rem; }
+  .menu-header { text-align: center; margin-bottom: 5rem; }
+  .menu-header .section-title { font-size: 4rem; }
+  .menu-tabs { display: flex; justify-content: center; gap: 0; margin-top: 2.5rem; }
+  .tab-btn {
+    font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em;
+    text-transform: uppercase; padding: 0.8rem 2rem; border: 1px solid rgba(201,169,110,0.25);
+    background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+    margin: 0 -0.5px;
+  }
+  .tab-btn.active, .tab-btn:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+  .menu-grid { display: none; grid-template-columns: 1fr 1fr; gap: 0; max-width: 900px; margin: 0 auto; }
+  .menu-grid.active { display: grid; }
+  .menu-item {
+    padding: 2.5rem; border-bottom: 1px solid rgba(201,169,110,0.1);
+    display: flex; justify-content: space-between; align-items: start; gap: 2rem;
+    transition: background 0.3s;
+  }
+  .menu-item:hover { background: rgba(201,169,110,0.03); }
+  .menu-item:nth-child(odd) { border-right: 1px solid rgba(201,169,110,0.1); }
+  .menu-item-info { flex: 1; }
+  .menu-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .menu-item-desc { font-size: 0.7rem; color: var(--text-muted); line-height: 1.7; letter-spacing: 0.05em; }
+  .menu-item-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); white-space: nowrap; }
+
+  /* AMBIENCE */
+  .ambience { padding: 8rem 4rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+  .ambience-card {
+    aspect-ratio: 3/4; background: var(--dark-3); position: relative; overflow: hidden;
+    display: flex; align-items: flex-end; padding: 2.5rem;
+    cursor: pointer;
+  }
+  .ambience-card:nth-child(2) { margin-top: 4rem; }
+  .ambience-card-bg { position: absolute; inset: 0; transition: transform 0.6s ease; }
+  .ambience-card:hover .ambience-card-bg { transform: scale(1.05); }
+  .ambience-card:nth-child(1) .ambience-card-bg { background: linear-gradient(135deg, #1a1208 0%, #2d2010 50%, #1a1208 100%); }
+  .ambience-card:nth-child(2) .ambience-card-bg { background: linear-gradient(135deg, #0d1a1a 0%, #0f2020 50%, #0d1a1a 100%); }
+  .ambience-card:nth-child(3) .ambience-card-bg { background: linear-gradient(135deg, #1a0d0d 0%, #2a1010 50%, #1a0d0d 100%); }
+  .ambience-pattern-1 { position: absolute; top: 30%; left: 20%; width: 60%; height: 40%; border: 1px solid rgba(201,169,110,0.15); border-radius: 50%; }
+  .ambience-pattern-2 { position: absolute; top: 10%; right: 10%; width: 40px; height: 40px; border: 1px solid rgba(201,169,110,0.2); transform: rotate(45deg); }
+  .ambience-pattern-3 { position: absolute; bottom: 20%; left: 10%; font-family: 'Cormorant Garamond', serif; font-size: 8rem; color: rgba(201,169,110,0.05); font-weight: 300; }
+  .ambience-card-text { position: relative; z-index: 2; }
+  .ambience-card-label { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .ambience-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; }
+
+  /* RESERVATION */
+  .reservation { background: var(--dark-2); padding: 8rem 4rem; text-align: center; }
+  .reservation-inner { max-width: 700px; margin: 0 auto; }
+  .reservation .section-title { font-size: 4rem; margin-bottom: 1rem; }
+  .reservation-sub { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 4rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .form-field { display: flex; flex-direction: column; text-align: left; }
+  .form-label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem; }
+  .form-input {
+    background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.3);
+    padding: 0.8rem 0; color: var(--cream); font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+    outline: none; transition: border-color 0.3s; width: 100%;
+  }
+  .form-input:focus { border-bottom-color: var(--gold); }
+  .form-input option { background: var(--dark); color: var(--cream); }
+  .form-input::placeholder { color: var(--text-muted); }
+  .form-full { margin-bottom: 1.5rem; }
+  .submit-btn {
+    margin-top: 3rem; padding: 1.2rem 4rem; border: 1px solid var(--gold);
+    background: transparent; color: var(--gold); font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.4s; display: inline-block;
+  }
+  .submit-btn:hover { background: var(--gold); color: var(--dark); }
+
+  /* FOOTER */
+  footer {
+    padding: 5rem 4rem 3rem;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem; border-top: 1px solid rgba(201,169,110,0.15);
+  }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--gold); margin-bottom: 1rem; }
+  .footer-tagline { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.1em; line-height: 1.8; }
+  .footer-col-title { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .footer-col p, .footer-col a { font-size: 0.75rem; color: var(--text-muted); line-height: 2.2; display: block; text-decoration: none; transition: color 0.3s; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { grid-column: 1/-1; border-top: 1px solid rgba(201,169,110,0.1); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .about { grid-template-columns: 1fr; }
+    .about-visual { min-height: 300px; }
+    .about-text { padding: 3rem 1.5rem; }
+    .menu { padding: 5rem 1.5rem; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .menu-item:nth-child(odd) { border-right: none; }
+    .ambience { grid-template-columns: 1fr; gap: 1rem; padding: 4rem 1.5rem; }
+    .ambience-card:nth-child(2) { margin-top: 0; }
+    .reservation { padding: 5rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-logo">AURUM</div>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#ambiente">Ambiente</a></li>
+    <li><a href="#reserva">Contacto</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('reserva').scrollIntoView({behavior:'smooth'})">Reservar Mesa</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Alta Cocina — Desde 1998</p>
+    <h1 class="hero-title">AU<em>R</em>UM</h1>
+    <p class="hero-subtitle">Una experiencia culinaria sin igual</p>
+    <div class="hero-divider"></div>
+    <p class="hero-scroll">Descubre más ↓</p>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="about" id="nosotros">
+  <div class="about-visual">
+    <div class="about-pattern"></div>
+    <div class="about-number">25</div>
+    <div class="about-badge">
+      <div class="about-badge-year">25</div>
+      <div class="about-badge-text">Años de<br>excelencia</div>
+    </div>
+  </div>
+  <div class="about-text">
+    <p class="section-tag">Nuestra historia</p>
+    <h2 class="section-title">El arte de la<br><em>gastronomía</em></h2>
+    <div class="gold-line"></div>
+    <p class="section-body">Aurum nació del sueño de crear un espacio donde la comida trasciende la nutrición y se convierte en experiencia. Cada plato es concebido con ingredientes de temporada seleccionados a mano, técnicas ancestrales y una visión contemporánea que nos define.</p>
+    <div class="gold-line"></div>
+    <p class="section-body" style="font-size:0.75rem; color: #6a6460;">Chef Sebastián Morales — Chef Ejecutivo & Fundador</p>
+  </div>
+</section>
+
+<!-- MENÚ -->
+<section class="menu" id="menu">
+  <div class="menu-header">
+    <p class="section-tag">Temporada actual</p>
+    <h2 class="section-title">Nuestra <em>Carta</em></h2>
+    <div style="width:40px;height:1px;background:var(--gold);margin:2rem auto;"></div>
+    <div class="menu-tabs">
+      <button class="tab-btn active" onclick="switchTab('entradas', this)">Entradas</button>
+      <button class="tab-btn" onclick="switchTab('principales', this)">Principales</button>
+      <button class="tab-btn" onclick="switchTab('postres', this)">Postres</button>
+    </div>
+  </div>
+
+  <div class="menu-grid active" id="entradas">
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tartar de Atún Rojo</div><div class="menu-item-desc">Aguacate, ikura, ponzu cítrico, microgreens</div></div><div class="menu-item-price">Bs. 145</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Burrata al Trufa</div><div class="menu-item-desc">Trufa negra, tomates heirloom, aceite de albahaca</div></div><div class="menu-item-price">Bs. 165</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Vieiras Selladas</div><div class="menu-item-desc">Puré de coliflor, caviar, mantequilla noisette</div></div><div class="menu-item-price">Bs. 195</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Foie Gras Poché</div><div class="menu-item-desc">Brioche, confitura de higos, sal en escamas</div></div><div class="menu-item-price">Bs. 215</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ceviche de Langostinos</div><div class="menu-item-desc">Leche de tigre, ají amarillo, maíz cancha tostado</div></div><div class="menu-item-price">Bs. 155</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carpaccio de Res</div><div class="menu-item-desc">Alcaparras, parmesano 36 meses, rúcula silvestre</div></div><div class="menu-item-price">Bs. 135</div></div>
+  </div>
+
+  <div class="menu-grid" id="principales">
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Lomo Alto Wagyu A5</div><div class="menu-item-desc">Sal de trufa, reducción de Borgoña, tuétano</div></div><div class="menu-item-price">Bs. 485</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Langosta Thermidor</div><div class="menu-item-desc">Gratinada, bisqué, arroz al azafrán</div></div><div class="menu-item-price">Bs. 395</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pichón de Bresse</div><div class="menu-item-desc">Jus de caza, setas silvestres, polenta trufada</div></div><div class="menu-item-price">Bs. 345</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Rodaballo Salvaje</div><div class="menu-item-desc">Beurre blanc, espárragos blancos, caviar Osetra</div></div><div class="menu-item-price">Bs. 325</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Risotto al Porcini</div><div class="menu-item-desc">Trufa de verano, parmesano, aceite de avellana</div></div><div class="menu-item-price">Bs. 265</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cordero de Leche</div><div class="menu-item-desc">Carré asado, cus-cus, yogur de hierbas, harissa</div></div><div class="menu-item-price">Bs. 365</div></div>
+  </div>
+
+  <div class="menu-grid" id="postres">
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Soufflé de Chocolate</div><div class="menu-item-desc">Valrhona 72%, helado de vainilla bourbon</div></div><div class="menu-item-price">Bs. 115</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tarta Tatin</div><div class="menu-item-desc">Manzana caramelizada, crema fraîche, canela</div></div><div class="menu-item-price">Bs. 95</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mousse de Maracuyá</div><div class="menu-item-desc">Crumble de coco, caviar de mango, menta fresca</div></div><div class="menu-item-price">Bs. 105</div></div>
+    <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Selección de Quesos</div><div class="menu-item-desc">Afinados europeos, nueces, membrillo, miel trufada</div></div><div class="menu-item-price">Bs. 145</div></div>
+  </div>
+</section>
+
+<!-- AMBIENTE -->
+<section class="ambience" id="ambiente">
+  <div class="ambience-card">
+    <div class="ambience-card-bg"></div>
+    <div class="ambience-pattern-1"></div>
+    <div class="ambience-pattern-2"></div>
+    <div class="ambience-card-text">
+      <div class="ambience-card-label">El espacio</div>
+      <div class="ambience-card-title">Salón<br>Principal</div>
+    </div>
+  </div>
+  <div class="ambience-card">
+    <div class="ambience-card-bg"></div>
+    <div class="ambience-pattern-3">✦</div>
+    <div class="ambience-card-text">
+      <div class="ambience-card-label">Exclusividad</div>
+      <div class="ambience-card-title">Salón<br>Privado</div>
+    </div>
+  </div>
+  <div class="ambience-card">
+    <div class="ambience-card-bg"></div>
+    <div style="position:absolute;top:0;left:0;right:0;height:50%;border-bottom:1px solid rgba(201,169,110,0.1);"></div>
+    <div class="ambience-card-text">
+      <div class="ambience-card-label">Al aire libre</div>
+      <div class="ambience-card-title">Terraza<br>Jardín</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVA -->
+<section class="reservation" id="reserva">
+  <div class="reservation-inner">
+    <p class="section-tag">¿Listo para vivir la experiencia?</p>
+    <h2 class="section-title">Haz tu <em>Reserva</em></h2>
+    <p class="reservation-sub">Te esperamos de martes a domingo, de 12:00 a 16:00 y de 19:00 a 23:30</p>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Nombre completo</label>
+        <input class="form-input" type="text" placeholder="Tu nombre">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Teléfono</label>
+        <input class="form-input" type="tel" placeholder="+591 xxx xxxx">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" type="date">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Horario</label>
+        <select class="form-input">
+          <option value="">Seleccionar...</option>
+          <option>12:00</option><option>13:00</option><option>14:00</option>
+          <option>19:00</option><option>20:00</option><option>21:00</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Comensales</label>
+        <select class="form-input">
+          <option>1 persona</option><option>2 personas</option><option>3 personas</option>
+          <option>4 personas</option><option>5 personas</option><option>6+ personas</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Ocasión especial</label>
+        <select class="form-input">
+          <option>Sin ocasión especial</option>
+          <option>Cumpleaños</option><option>Aniversario</option>
+          <option>Reunión de negocios</option><option>Propuesta de matrimonio</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field form-full">
+      <label class="form-label">Peticiones especiales</label>
+      <input class="form-input" type="text" placeholder="Alergias, preferencias, decoración...">
+    </div>
+
+    <button class="submit-btn" onclick="handleReserva()">Confirmar Reservación</button>
+    <div id="confirm-msg" style="display:none;margin-top:2rem;font-size:0.8rem;color:var(--gold);letter-spacing:0.1em;">
+      ✦ Reserva recibida. Nos comunicaremos contigo en breve. ✦
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">AURUM</div>
+    <p class="footer-tagline">Alta cocina con alma.<br>La Paz, Bolivia.<br><br>© 2024 Aurum Restaurant.</p>
+  </div>
+  <div class="footer-col">
+    <div class="footer-col-title">Horarios</div>
+    <p>Martes a viernes</p>
+    <p>12:00 — 16:00 / 19:00 — 23:30</p>
+    <p style="margin-top:0.8rem;">Sábado y domingo</p>
+    <p>12:00 — 17:00 / 19:00 — 00:00</p>
+    <p style="margin-top:0.8rem;color:#5a5450;">Lunes cerrado</p>
+  </div>
+  <div class="footer-col">
+    <div class="footer-col-title">Contacto</div>
+    <a href="#">reservas@aurum.bo</a>
+    <a href="#">+591 2 240 0000</a>
+    <p style="margin-top:0.8rem;">Av. Arce 2177, Sopocachi</p>
+    <p>La Paz, Bolivia</p>
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+      <a href="#" style="font-size:0.65rem;letter-spacing:0.15em;">Instagram</a>
+      <a href="#" style="font-size:0.65rem;letter-spacing:0.15em;">Facebook</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">Aurum Restaurant — La Paz, Bolivia — Todos los derechos reservados</p>
+    <p class="footer-copy">Diseñado con pasión ✦</p>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  });
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.menu-grid').forEach(g => g.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function handleReserva() {
+    document.getElementById('confirm-msg').style.display = 'block';
+    document.querySelector('.submit-btn').style.opacity = '0.5';
+    document.querySelector('.submit-btn').disabled = true;
+  }
+</script>
+</body>
+</html>
